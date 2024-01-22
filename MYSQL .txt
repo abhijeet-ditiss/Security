@@ -1,0 +1,274 @@
+MYSQL 
+
+Installations :-
+
+1) apt install mariadb-server
+2)systemctl status mariadb
+3)systemctl enable mariadb
+4) mysql_secure_installation
+5)mysql -u root -p
+6)mariadb[none]>  CREATE DATABASE MYSQL;
+7)   USE MYSQL;
+8)SHOW  DATABASES;
+9)CREATE USER 'USER'@'LOCALHOST' IDENTIFIED BY 'MYSQL@123';
+10)FLUSH PRIVILEGES
+11)GRANT ALL ON*.* TO 'USER'@'LOCALHOST' with GRANT OPTION;
+12)GRANT INSERT,UPDATE ON *.*TO' USER'@'LOCALHOST'
+13)SHOW GRANTS FOR 'USER'@LOCALHOST;
+14)DROP USER 'USER@LOCALHOST';
+ ===========================================================================  
+
+CREATION :-
+
+1)mysql_secure_installation
+2)show databases;
+3)create database muskan;
+4)show databases;
+5)use muskan;
+6)show tables;
+
+7)use demo;
+8)create table student(id int, name varchar(20), email varchar(20), password varchar(20));+
+9)show tables;
+    
+====================================================================
+
+Add data row to tables
+
+1) insert into student(id,name,email,passwod) values (1,'gita',mg,'8');
+2)show tables;
+3)select * from student
+4)exit
+5)desc student;
+6)insert into student values(2,'sita',sg,'s');
+7)select * from student;
+8)select name from student;
+
+=======================================================================
+
+only conditions :-
+
+1)select * from student where id = 12;
+======================================================================
+
+
+Adding a column:-
+
+1) update student set address='pune' where id ='12';
+
+========================================================================
+
+Adding a column:- 
+
+1)alter table student add phoneno int;
+2)select * from student
+3)update student set phoneno=12345 where id =12;
+4)select * from student
+5)desc student;
+===========================================================================
+
+Alter:- 
+1)alter table student modify column name varchar(20);
+2)desc student;
+
+===============================================================================
+
+Remove :- 
+1)alter table student drop column phoneno;
+2)select * from student
+3)desc student;
+
+===============================================================================
+
+delete:-
+
+1)delete from student where name='kamal';
+2)select * from student;
+
+==============================================================================
+
+calculation:-
+
+1)select sum(marks) from students;
+2)select avg(marks) from students;
+3)select count(name) from students;
+4)select * from student;
+5) select max(marks) from student;
+6)select min (marks) from student;
+
+
+=============================================================================================
+
+Order by:-
+
+1) select * from student order by id;
+2)select * from student order by marks;
+3)select * from student order by id desc;
+4)select * from student where name like 'r%'
+5)select * from student where name like '%h'
+6)select * from student where name like '_a%'
+7)select * from student where name like ''%s_'
+
+==========================================================================================
+
+Join operation :- 
+
+1)create table employee(id int not null primary key,salary int,empcode int , name varchar(20));
+2)insert into employee values(1, 10, 11,'aman'),(2,20,12,'tanay')
+3)select * from employee
+4)select * from student
+5)select * from student inner join employee on student.id=employee.id
+6)select * from employee
+7)select * from student
+8)select * from student left join employee on student.id=employee.id
+9)select * from student right join employee on student.id=employee.id
+10)select * from student cross join employee on student.id=employee.id
+
+==============================================================================================
+
+
+Q1:-
+
+CREATE TABLE newdb.lab1_store (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    purchase_date DATE NOT NULL
+);
+
+
+SELECT *
+FROM newdb.lab1_store
+WHERE price > 1;
+
+
+SELECT *
+FROM newdb.lab1_store
+ORDER BY product_name;
+
+
+SELECT SUM(quantity * price) AS total_cost
+FROM newdb.lab1_store;
+
+=========================================================================================
+
+Q2:-
+
+import os
+import re
+
+def find_files_with_extension(directory, extension):
+    # Validate directory path
+    if not os.path.isdir(directory):
+        print(f"Error: {directory} is not a valid directory.")
+        return
+    
+    # Create a regular expression pattern for the specified extension
+    pattern = re.compile(f".*\\.{extension}$")
+    
+    # List all files in the directory
+    files = os.listdir(directory)
+    
+    # Filter files using the regular expression pattern
+    matching_files = [file for file in files if pattern.match(file)]
+    
+    # Print the matching files
+    if matching_files:
+        print(f"Files with the '{extension}' extension in {directory}:")
+        for file in matching_files:
+            print(file)
+    else:
+        print(f"No files with the '{extension}' extension found in {directory}")
+
+# Example usage
+directory_path = "/path/to/your/directory"
+file_extension = "txt"
+find_files_with_extension(directory_path, file_extension)
+
+Replace /path/to/your/directory with the actual path of the directory you want to search, and "txt" with the desired file extension. This program will print a list of files in the specified directory that have the specified file extension.
+
+=========================================================================================================================
+
+
+Q3:-
+
+server code(server.py)
+
+import socket
+
+def start_server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_host = '127.0.0.1'
+    server_port = 12345
+    server_socket.bind((server_host, server_port))
+    server_socket.listen(1)
+
+    print(f"Server listening on {server_host}:{server_port}")
+
+    while True:
+        connection, address = server_socket.accept()
+        print(f"Connection from {address}")
+
+        file_name = connection.recv(1024).decode()
+        print(f"Receiving file: {file_name}")
+
+        with open(file_name, 'wb') as file:
+            data = connection.recv(1024)
+            while data:
+                file.write(data)
+                data = connection.recv(1024)
+
+        print(f"File {file_name} received successfully.")
+
+        connection.close()
+
+if __name__ == "__main__":
+    start_server()
+
+
+
+client code(client.py)
+
+import socket
+
+def start_client():
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_host = '127.0.0.1'
+    server_port = 12345
+
+    file_name = "example.txt"
+
+    client_socket.connect((server_host, server_port))
+    client_socket.send(file_name.encode())
+
+    with open(file_name, 'rb') as file:
+        data = file.read(1024)
+        while data:
+            client_socket.send(data)
+            data = file.read(1024)
+
+    print(f"File {file_name} sent successfully.")
+
+    client_socket.close()
+
+if __name__ == "__main__":
+    start_client()
+Make sure to run the server code (server.py) before the client code (client.py). Also, replace "example.txt" with the actual file you want to transfer. Note that this is a basic example, and for real-world scenarios, you may want to add error handling, security measures, and possibly a more efficient way to handle file transfer.
+
+
+client aur server dono jagah server ka ip dalna h ,filename me khud ka file bnana h
+
+================================================================================================================================================================
+
+Q4:-
+
+
+
+
+
+
+
+
+
+
